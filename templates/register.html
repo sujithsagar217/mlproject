@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e1f29, #50492c);
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1200px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      width: 320px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: float 6s ease-in-out infinite;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+    }
+
+    .container:hover {
+      transform: rotateY(6deg) rotateX(3deg);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 25px;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input::placeholder {
+      color: #bbb;
+    }
+
+    input:focus {
+      border-color: #00ffe5;
+      outline: none;
+      box-shadow: 0 0 8px #00ffe5;
+    }
+
+    .toggle-password {
+      position: relative;
+    }
+
+    .toggle-password input {
+      padding-right: 35px;
+    }
+
+    .toggle-password span {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #ccc;
+      user-select: none;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #ffc107, #ea8c11);
+      border: none;
+      color: black;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    button:hover {
+      background-color: #ff9800;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(255, 193, 7, 0.4);
+    }
+
+    p {
+      text-align: center;
+      margin-top: 20px;
+      color: #ddd;
+    }
+
+    a {
+      color: #00ffe5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Glowing border */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      z-index: -1;
+      background: linear-gradient(45deg, #eacd11, #ffc107, #ffeb3b);
+      background-size: 600% 600%;
+      animation: glowBorder 8s ease infinite;
+      border-radius: 20px;
+      filter: blur(12px);
+      opacity: 0.5;
+    }
+
+    @keyframes glowBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Register</h2>
+    <form method="post" onsubmit="handleRegister(event)">
+      <input type="text" name="username" placeholder="Username" required><br>
+      <input type="email" name="email" placeholder="Email" required><br>
+      <div class="toggle-password">
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <span onclick="togglePassword()"></span>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already registered? <a href="/login">Login</a></p>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordField = document.getElementById('password');
+      const type = passwordField.getAttribute('type');
+      passwordField.setAttribute('type', type === 'password' ? 'text' : 'password');
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      alert("Registration successful!");
+      window.location.href = "/login";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      perspective: 1200px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      width: 320px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: float 6s ease-in-out infinite;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+    }
+
+    .container:hover {
+      transform: rotateY(8deg) rotateX(4deg);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 25px;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    input::placeholder {
+      color: #ccc;
+    }
+
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.1); /* keep same as default */
+      border-color: #00ffe5;
+      box-shadow: 0 0 8px #00ffe5;
+    }
+
+    .toggle-password {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-password span {
+      position: absolute;
+      right: 15px;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 25px;
+      background: linear-gradient(135deg, #00ffe5, #0077ff);
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 8px 20px rgba(0, 255, 229, 0.4);
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 255, 229, 0.6);
+    }
+
+    p {
+      text-align: center;
+      margin-top: 20px;
+      color: #ddd;
+    }
+
+    a {
+      color: #00ffe5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      z-index: -1;
+      background: linear-gradient(45deg, #00ffe5, #0077ff, #00ffe5);
+      background-size: 600% 600%;
+      animation: gradientGlow 8s ease infinite;
+      border-radius: 20px;
+      filter: blur(12px);
+      opacity: 0.6;
+    }
+
+    @keyframes gradientGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form method="post">
+      <input type="text" name="username" placeholder="Username" required><br>
+      <div class="toggle-password">
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <span onclick="togglePassword()"></span>
+      </div>
+      <button type="submit">Login</button>
+    </form>
+    <p>New user? <a href="/register">Register</a></p>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const currentType = passwordInput.getAttribute('type');
+      passwordInput.setAttribute('type', currentType === 'password' ? 'text' : 'password');
+    }
+  </script>
+</body>
+</html>

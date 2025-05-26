@@ -1,0 +1,4 @@
+user_id,sex,age,height,weight,bmi,hypertension,diabetes,level,fitness_goal,fitness_type,exercise,diet
+1,1,30,171.0,70.0,2.0,0,1,1,1,1,"Squats, yoga, deadlifts, bench presses, and overhead presses","Vegetables: (Garlic, mushroon, green papper);Protein Intake: ( Baru Nuts, Beech Nuts, and Hemp Seeds); Juice : (Apple juice, Mango, and Beetroot Juice)"
+1,Male,21,171.0,68.0,3.0,Yes,Yes,Beginner,Weight Loss,Cardio,4,4
+1,Male,21,171.0,69.0,3.0,No,No,Beginner,Weight Loss,Cardio,0,1
