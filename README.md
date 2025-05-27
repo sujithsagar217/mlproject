@@ -48,7 +48,6 @@ This is a Flask-based web application that helps users get personalized health r
 
 ## ✅ Best Practices Followed
 
-* Modularized ML logic in a separate utility file (`model_utils.py`).
 * Passwords hashed before storing in DB using `generate_password_hash`.
 * Authenticated routes protected with `@login_required`.
 * Flash messages used for feedback.
@@ -67,22 +66,9 @@ This is a Flask-based web application that helps users get personalized health r
 * During setup, ensure to:
 
   * Choose **Complete** installation
-  * Check **"Install MongoDB as a Service"**
+  * Check **"Install MongoDB as a Service"** (this allows auto-start)
 
-#### 2. ✅ Verify MongoDB is Running
-
-* Open Command Prompt:
-
-  ```bash
-  net start MongoDB
-  ```
-* Or run `mongod.exe` manually if you installed the `.zip` version:
-
-  ```bash
-  C:\mongodb\bin\mongod.exe --dbpath C:\data\db
-  ```
-
-#### 3. ✅ Create Virtual Environment & Activate It
+#### 2. ✅ Create Virtual Environment & Activate It
 
 ```bash
 cd path\to\your\project
@@ -90,13 +76,21 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-#### 4. ✅ Install Python Dependencies
+#### 3. ✅ Generate and Install Python Dependencies
+
+To create your `requirements.txt` file (only once):
+
+```bash
+pip3 freeze > requirements.txt
+```
+
+To install dependencies (for new users):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 5. ✅ Ensure You Have Model Files
+#### 4. ✅ Ensure You Have Model Files
 
 Ensure these files exist:
 
@@ -112,16 +106,19 @@ Path in `app.py`:
 joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_exercises_model.pkl')
 ```
 
-Adjust if needed.
+Adjust path if necessary.
 
-#### 6. ✅ Ensure MongoDB Has the Database & Collections
+#### 5. ✅ MongoDB Service Should Be Running
 
-MongoDB will auto-create them on insert:
+MongoDB starts automatically as a service after install. If not:
 
-* DB: `fitness`
-* Collections: `users`, `submissions`
+```bash
+net start MongoDB
+```
 
-No manual schema setup needed.
+#### 6. ✅ MongoDB Database Auto-Creation
+
+The app will automatically create the `fitness` database and collections (`users`, `submissions`) on first insert. No manual setup needed.
 
 ---
 
@@ -142,7 +139,6 @@ Open your browser at: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 ```
 project/
 ├── app.py
-├── model_utils.py
 ├── models/
 │   ├── rf_exercises_model.pkl
 │   ├── rf_diet_model.pkl
