@@ -179,5 +179,12 @@ def submissions():
         })
     return render_template('submissions.html', records=records)
 
+@app.route('/history')
+@login_required
+def history():
+    user_history_cursor = submissions_collection.find({'user_id': ObjectId(current_user.id)}).sort('_id', -1)
+    user_history = list(user_history_cursor)  # Convert cursor to list
+    return render_template('history.html', records=user_history)
+
 if __name__ == '__main__':
     app.run(debug=True)

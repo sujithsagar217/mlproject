@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Health and Fitness Recommendation</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      function calculateBMI() {
+        const height = parseFloat(document.getElementById("height").value);
+        const weight = parseFloat(document.getElementById("weight").value);
+        const bmiField = document.getElementById("bmi");
+
+        if (!isNaN(height) && height > 0 && !isNaN(weight) && weight > 0) {
+          const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
+          bmiField.value = bmi;
+        } else {
+          bmiField.value = '';
+        }
+      }
+
+      document.getElementById("height").addEventListener("input", calculateBMI);
+      document.getElementById("weight").addEventListener("input", calculateBMI);
+    });
+  </script>
 </head>
 <body class="bg-light">
   <div class="container py-5">
@@ -14,6 +33,7 @@
         {% if user %}
           <div class="text-end mb-3">
             <strong>Welcome, {{ user.username }}</strong> |
+            <a href="/history" class="btn btn-sm btn-outline-info">View History</a>
             <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>
           </div>
         {% else %}
@@ -40,12 +60,12 @@
           </div>
           <div class="card-body">
             <form action="/predict" method="post" class="needs-validation" novalidate>
-              <!-- Uncomment if using Flask-WTF with CSRF protection -->
               {# {{ csrf_token() }} #}
 
               <div class="mb-3">
                 <label for="sex" class="form-label">Sex:</label>
                 <select id="sex" name="Sex" class="form-select" required>
+                  <option value="" disabled selected>-- Select --</option>
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
                 </select>
@@ -53,7 +73,7 @@
 
               <div class="mb-3">
                 <label for="age" class="form-label">Age:</label>
-                <input type="number" id="age" name="Age" class="form-control" required>
+                <input type="number" id="age" name="Age" class="form-control" min="1" required>
               </div>
 
               <div class="mb-3">
@@ -68,7 +88,7 @@
 
               <div class="mb-3">
                 <label for="bmi" class="form-label">BMI:</label>
-                <input type="number" step="0.1" id="bmi" name="BMI" class="form-control" required>
+                <input type="number" step="0.1" id="bmi" name="BMI" class="form-control" readonly required>
               </div>
 
               <div class="mb-3">

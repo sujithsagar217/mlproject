@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Recommendation History</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Your Fitness Recommendations History</h2>
+      <a href="/" class="btn btn-sm btn-primary">Back to Home</a>
+    </div>
+
+    {% if records|length == 0 %}
+      <div class="alert alert-info text-center">No records found yet.</div>
+    {% else %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+          <thead class="table-dark">
+            <tr>
+              <th>Date</th>
+              <th>Age</th>
+              <th>Sex</th>
+              <th>Height</th>
+              <th>Weight</th>
+              <th>BMI</th>
+              <th>Goal</th>
+              <th>Type</th>
+              <th>Exercise</th>
+              <th>Diet</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in records %}
+              <tr>
+                <td>{{ r._id.generation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ r.age }}</td>
+                <td>{{ r.sex }}</td>
+                <td>{{ r.height }}</td>
+                <td>{{ r.weight }}</td>
+                <td>{{ r.bmi }}</td>
+                <td>{{ r.fitness_goal }}</td>
+                <td>{{ r.fitness_type }}</td>
+                <td>{{ r.exercise }}</td>
+                <td>{{ r.diet }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
