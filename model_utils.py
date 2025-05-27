@@ -1,9 +1,9 @@
 import joblib
 
 # Load models and encoders once
-rf_exercises = joblib.load('C:/Users/mahan/Desktop/project/rf_exercises_model.pkl')
-rf_diet = joblib.load('C:/Users/mahan/Desktop/project/rf_diet_model.pkl')
-label_encoders = joblib.load("C:/Users/mahan/Desktop/project/label_encoders.pkl")
+rf_exercises = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_exercises_model.pkl')
+rf_diet = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_diet_model.pkl')
+label_encoders = joblib.load(r'C:\Users\HP\Desktop\mlproject\label_encoders.pkl')
 
 def predict_exercise_and_diet(features):
     # Predict class labels

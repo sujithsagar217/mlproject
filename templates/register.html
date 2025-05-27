@@ -31,6 +31,7 @@
       animation: float 6s ease-in-out infinite;
       transform-style: preserve-3d;
       transition: transform 0.6s ease;
+      position: relative;
     }
 
     .container:hover {
@@ -77,10 +78,6 @@
 
     .toggle-password {
       position: relative;
-    }
-
-    .toggle-password input {
-      padding-right: 35px;
     }
 
     .toggle-password span {
@@ -131,7 +128,6 @@
       text-decoration: underline;
     }
 
-    /* Glowing border */
     .container::before {
       content: '';
       position: absolute;
@@ -153,21 +149,36 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Register</h2>
-    <form method="post" onsubmit="handleRegister(event)">
-      <input type="text" name="username" placeholder="Username" required><br>
-      <input type="email" name="email" placeholder="Email" required><br>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul style="color: #ffb74d; text-align: center; list-style: none; padding: 0;">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <!-- Include this line only if using Flask-WTF and CSRFProtect -->
+      {# {{ csrf_token() }} #}
+
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="email" name="email" placeholder="Email" required>
       <div class="toggle-password">
         <input type="password" name="password" id="password" placeholder="Password" required>
-        <span onclick="togglePassword()"></span>
+        <span onclick="togglePassword()" title="Show/Hide Password"></span>
       </div>
       <button type="submit">Register</button>
     </form>
+
     <p>Already registered? <a href="/login">Login</a></p>
   </div>
 
@@ -176,12 +187,6 @@
       const passwordField = document.getElementById('password');
       const type = passwordField.getAttribute('type');
       passwordField.setAttribute('type', type === 'password' ? 'text' : 'password');
-    }
-
-    function handleRegister(event) {
-      event.preventDefault();
-      alert("Registration successful!");
-      window.location.href = "/login";
     }
   </script>
 </body>
