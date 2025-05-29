@@ -1,5 +1,3 @@
-# Finalized MongoDB-only Flask App (No SQLAlchemy)
-
 from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,28 +11,26 @@ from sklearn.exceptions import InconsistentVersionWarning
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with secure secret in production
+app.secret_key = 'your_secret_key'  # Replace with a secure key in production
 
+# MongoDB Configuration
 mongo_uri = os.environ.get("MONGO_URI", "mongodb://mongo:27017/")
 client = MongoClient(mongo_uri)
 db = client["fitness"]
 users_collection = db["users"]
 submissions_collection = db["submissions"]
 
-# Flask-Login
+# Flask-Login Setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Base directory inside the container
+# Load ML models and encoders
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Load model using relative path
 rf_exercises = joblib.load(os.path.join(BASE_DIR, 'rf_exercises_model.pkl'))
 rf_diet = joblib.load(os.path.join(BASE_DIR, 'rf_diet_model.pkl'))
 label_encoders = joblib.load(os.path.join(BASE_DIR, 'label_encoders.pkl'))
 
-# User class
 class User(UserMixin):
     def __init__(self, user_data):
         self.id = str(user_data['_id'])
@@ -77,7 +73,7 @@ def register():
         flash('Registration successful. Please log in.')
         return redirect(url_for('login'))
 
-    return render_template('register.html')
+    return render_template('register.html', user=current_user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -95,7 +91,7 @@ def login():
             return redirect(url_for('home'))
 
         flash('Invalid credentials')
-    return render_template('login.html')
+    return render_template('login.html', user=current_user)
 
 @app.route('/logout')
 @login_required
@@ -156,39 +152,29 @@ def predict():
         }
         submissions_collection.insert_one(submission)
 
-        return render_template('result.html', exercise=exercise_result, diet=diet_result)
+        return render_template('result.html', exercise=exercise_result, diet=diet_result, user=current_user)
     except Exception as e:
-        return render_template('error.html', error=str(e))
+        return render_template('error.html', error=str(e), user=current_user)
 
-@app.route('/submissions')
+@app.route('/dashboard')
 @login_required
-def submissions():
-    results = submissions_collection.find({'user_id': ObjectId(current_user.id)})
+def dashboard():
+    cursor = submissions_collection.find({'user_id': ObjectId(current_user.id)}).sort('_id', 1)
     records = []
-    for r in results:
-        records.append({
-            'id': str(r['_id']),
-            'sex': r['sex'],
-            'age': r['age'],
-            'height': r['height'],
-            'weight': r['weight'],
-            'bmi': r['bmi'],
-            'hypertension': r['hypertension'],
-            'diabetes': r['diabetes'],
-            'level': r['level'],
-            'fitness_goal': r['fitness_goal'],
-            'fitness_type': r['fitness_type'],
-            'predicted_exercise': r['exercise'],
-            'predicted_diet': r['diet']
-        })
-    return render_template('submissions.html', records=records)
+    for r in cursor:
+        r['_id'] = str(r['_id'])
+        r['user_id'] = str(r['user_id'])
+        r['timestamp'] = ObjectId(str(r['_id'])).generation_time.isoformat()
+        records.append(r)
+
+    return render_template('dashboard.html', user=current_user, records=records)
 
 @app.route('/history')
 @login_required
 def history():
     user_history_cursor = submissions_collection.find({'user_id': ObjectId(current_user.id)}).sort('_id', -1)
-    user_history = list(user_history_cursor)  # Convert cursor to list
-    return render_template('history.html', records=user_history)
+    user_history = list(user_history_cursor)
+    return render_template('history.html', records=user_history, user=current_user)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
