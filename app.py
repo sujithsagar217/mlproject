@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, U
 from werkzeug.security import generate_password_hash, check_password_hash
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import os
 import joblib
 import warnings
 from sklearn.exceptions import InconsistentVersionWarning
@@ -14,8 +15,8 @@ warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with secure secret in production
 
-# MongoDB Configuration
-client = MongoClient("mongodb://localhost:27017/")
+mongo_uri = os.environ.get("MONGO_URI", "mongodb://mongo:27017/")
+client = MongoClient(mongo_uri)
 db = client["fitness"]
 users_collection = db["users"]
 submissions_collection = db["submissions"]
@@ -25,10 +26,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Load models using static path
-rf_exercises = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_exercises_model.pkl')
-rf_diet = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_diet_model.pkl')
-label_encoders = joblib.load(r'C:\Users\HP\Desktop\mlproject\label_encoders.pkl')
+# Base directory inside the container
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load model using relative path
+rf_exercises = joblib.load(os.path.join(BASE_DIR, 'rf_exercises_model.pkl'))
+rf_diet = joblib.load(os.path.join(BASE_DIR, 'rf_diet_model.pkl'))
+label_encoders = joblib.load(os.path.join(BASE_DIR, 'label_encoders.pkl'))
 
 # User class
 class User(UserMixin):
@@ -187,4 +191,4 @@ def history():
     return render_template('history.html', records=user_history)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

@@ -1,9 +1,12 @@
 import joblib
 
-# Load models and encoders once
-rf_exercises = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_exercises_model.pkl')
-rf_diet = joblib.load(r'C:\Users\HP\Desktop\mlproject\rf_diet_model.pkl')
-label_encoders = joblib.load(r'C:\Users\HP\Desktop\mlproject\label_encoders.pkl')
+# Base directory inside the container
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load model using relative path
+rf_exercises = joblib.load(os.path.join(BASE_DIR, 'rf_exercises_model.pkl'))
+rf_diet = joblib.load(os.path.join(BASE_DIR, 'rf_diet_model.pkl'))
+label_encoders = joblib.load(os.path.join(BASE_DIR, 'label_encoders.pkl'))
 
 def predict_exercise_and_diet(features):
     # Predict class labels
