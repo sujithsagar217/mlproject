@@ -1,0 +1,126 @@
+{% include 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fitness Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Optional: Zoom Plugin -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script> -->
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">
+    <span style="font-size: 1.5rem;">📊</span> Your Fitness Analytics
+  </h2>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">BMI Trend</div>
+        <div class="card-body">
+          <canvas id="bmiChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white">Weight Trend</div>
+        <div class="card-body">
+          <canvas id="weightChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const records = {{ records | tojson }};
+  const dates = records.map(r =>
+    new Date(r.timestamp).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })
+  );
+  const bmi = records.map(r => parseFloat(r.bmi));
+  const weight = records.map(r => parseFloat(r.weight));
+
+  const xAxisOptions = {
+    title: { display: true, text: 'Date' },
+    ticks: {
+      autoSkip: true,
+      maxTicksLimit: 5,
+      maxRotation: 45,
+      minRotation: 30
+    }
+  };
+
+  // BMI Chart
+  new Chart(document.getElementById('bmiChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'BMI',
+        data: bmi,
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: xAxisOptions,
+        y: {
+          title: { display: true, text: 'BMI' }
+        }
+      },
+      plugins: {
+        legend: { position: 'top' },
+        // zoom: {
+        //   pan: { enabled: true, mode: 'x' },
+        //   zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
+        // }
+      }
+    }
+  });
+
+  // Weight Chart
+  new Chart(document.getElementById('weightChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Weight (kg)',
+        data: weight,
+        borderColor: 'green',
+        backgroundColor: 'rgba(0, 128, 0, 0.1)',
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: xAxisOptions,
+        y: {
+          title: { display: true, text: 'Weight (kg)' }
+        }
+      },
+      plugins: {
+        legend: { position: 'top' },
+        // zoom: {
+        //   pan: { enabled: true, mode: 'x' },
+        //   zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
+        // }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
