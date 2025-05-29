@@ -1,6 +1,6 @@
 # 🐳 Dockerized Flask + MongoDB Application Setup (Windows)
 
-This guide documents the full setup process for containerizing a Flask app with MongoDB using Docker on **Windows** — including installation, troubleshooting, image building, running containers, and integrating MongoDB.
+This guide documents the full setup process for containerizing a Flask app with MongoDB using Docker on **Windows** — including installation, troubleshooting, image building, running containers, integrating MongoDB, and verifying data with MongoDB Compass.
 
 ---
 
@@ -167,6 +167,74 @@ client = MongoClient(mongo_uri)
 ```bash
 docker compose up --build
 ```
+
+To restart containers without rebuilding:
+
+```bash
+docker compose up -d
+```
+
+To stop containers (without removing):
+
+```bash
+docker compose stop
+```
+
+To remove containers:
+
+```bash
+docker compose down
+```
+
+---
+
+## 📃 Step 5: View MongoDB Data in MongoDB Compass
+
+### 🔍 1. Connect to MongoDB from Compass
+
+Use this URI in MongoDB Compass:
+
+```
+mongodb://127.0.0.1:27017/
+```
+
+If you're using a custom port in Docker Compose (e.g. `27018`):
+
+```
+mongodb://127.0.0.1:27018/
+```
+
+### 💡 2. Common reasons Compass shows no data:
+
+* MongoDB Compass is connected to your **native Windows MongoDB**, not the Docker one.
+* No data has been inserted yet → MongoDB won't show the DB until a collection is created.
+* Conflicting MongoDB instances on port 27017.
+
+### 🔎 3. Check data directly in Docker MongoDB
+
+```bash
+docker exec -it mongodb mongosh
+```
+
+Inside mongosh:
+
+```js
+use fitness
+db.users.find().pretty()
+db.submissions.find().pretty()
+```
+
+If data appears here, but not in Compass, you're likely connected to the wrong instance.
+
+### ⛔️ 4. Stop native MongoDB (if needed)
+
+To ensure Compass connects only to Docker MongoDB:
+
+```powershell
+net stop MongoDB
+```
+
+Then reconnect in Compass.
 
 ---
 
